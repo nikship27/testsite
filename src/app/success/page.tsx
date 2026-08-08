@@ -7,7 +7,7 @@ import { formatPrice } from "@/lib/format";
 import { ArrowRightIcon, CartIcon, CheckIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
-  title: "Order confirmed · lumina",
+  title: "Order confirmed · Ethnic Threads",
 };
 
 export default async function SuccessPage(props: PageProps<"/success">) {
@@ -94,6 +94,7 @@ export default async function SuccessPage(props: PageProps<"/success">) {
                   </p>
                   <p className="text-xs text-muted">
                     {item.quantity} × {formatPrice(item.price)}
+                    {item.size ? ` · Size ${item.size}` : ""}
                   </p>
                 </div>
                 <span className="text-sm font-semibold">

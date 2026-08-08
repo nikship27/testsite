@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useCart } from "@/context/CartContext";
-import { formatPrice } from "@/lib/format";
+import { useCurrency } from "@/context/CurrencyContext";
 import {
   ArrowRightIcon,
   CartIcon,
@@ -24,6 +24,7 @@ export default function CartDrawer() {
     totalPrice,
     totalItems,
   } = useCart();
+  const { format } = useCurrency();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -48,6 +49,7 @@ export default function CartDrawer() {
           items: items.map((i) => ({
             productId: i.product.id,
             quantity: i.quantity,
+            size: i.size,
           })),
         }),
       });
@@ -122,7 +124,10 @@ export default function CartDrawer() {
           <>
             <ul className="flex-1 space-y-4 overflow-y-auto px-5 py-4">
               {items.map((item) => (
-                <li key={item.product.id} className="glass flex gap-3 rounded-2xl p-3">
+                <li
+                  key={`${item.product.id}|${item.size ?? ""}`}
+                  className="glass flex gap-3 rounded-2xl p-3"
+                >
                   <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl">
                     <Image
                       src={item.product.image}
@@ -140,7 +145,7 @@ export default function CartDrawer() {
                       </h4>
                       <button
                         type="button"
-                        onClick={() => removeFromCart(item.product.id)}
+                        onClick={() => removeFromCart(item.product.id, item.size)}
                         aria-label={`Remove ${item.product.title}`}
                         className="shrink-0 rounded-md p-1 text-muted transition hover:text-red-500"
                       >
@@ -148,12 +153,22 @@ export default function CartDrawer() {
                       </button>
                     </div>
 
+                    {item.size && (
+                      <span className="mt-1 inline-flex w-fit rounded-full bg-gold-soft px-2 py-0.5 text-[11px] font-semibold text-gold">
+                        Size {item.size}
+                      </span>
+                    )}
+
                     <div className="mt-auto flex items-center justify-between pt-2">
                       <div className="flex items-center gap-1 rounded-full border">
                         <button
                           type="button"
                           onClick={() =>
-                            updateQuantity(item.product.id, item.quantity - 1)
+                            updateQuantity(
+                              item.product.id,
+                              item.quantity - 1,
+                              item.size
+                            )
                           }
                           aria-label="Decrease quantity"
                           className="rounded-full p-1.5 transition hover:bg-accent-soft"
@@ -166,7 +181,11 @@ export default function CartDrawer() {
                         <button
                           type="button"
                           onClick={() =>
-                            updateQuantity(item.product.id, item.quantity + 1)
+                            updateQuantity(
+                              item.product.id,
+                              item.quantity + 1,
+                              item.size
+                            )
                           }
                           disabled={item.quantity >= item.product.stock}
                           aria-label="Increase quantity"
@@ -176,7 +195,7 @@ export default function CartDrawer() {
                         </button>
                       </div>
                       <span className="text-sm font-bold">
-                        {formatPrice(item.product.price * item.quantity)}
+                        {format(item.product.price * item.quantity)}
                       </span>
                     </div>
                   </div>
@@ -188,7 +207,7 @@ export default function CartDrawer() {
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted">Subtotal</span>
                 <span className="text-lg font-bold">
-                  {formatPrice(totalPrice)}
+                  {format(totalPrice)}
                 </span>
               </div>
               <p className="text-xs text-muted">

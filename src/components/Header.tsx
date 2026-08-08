@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { useTheme } from "@/context/ThemeContext";
+import CurrencySwitcher from "@/components/CurrencySwitcher";
 import {
   CartIcon,
   MoonIcon,
@@ -75,13 +76,17 @@ export default function Header({
   return (
     <header className="glass-strong sticky top-0 z-40 border-b">
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 sm:gap-6 sm:px-6">
-        <Link
-          href="/"
-          className="group flex shrink-0 items-center gap-2 text-lg font-bold tracking-tight"
-        >
-          <span className="text-gradient flex items-center">
+        <Link href="/" className="flex shrink-0 items-center gap-2.5">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-white shadow-md shadow-accent/25">
             <SparkleIcon className="h-5 w-5" />
-            <span className="ml-1">lumina</span>
+          </span>
+          <span className="leading-tight">
+            <span className="block text-base font-extrabold tracking-tight">
+              Ethnic Threads
+            </span>
+            <span className="hidden text-[10px] font-semibold uppercase tracking-[0.18em] text-gold sm:block">
+              Handcrafted Ethnic Wear
+            </span>
           </span>
         </Link>
 
@@ -114,6 +119,7 @@ export default function Header({
         </div>
 
         <div className="flex shrink-0 items-center gap-2">
+          <CurrencySwitcher />
           <button
             type="button"
             onClick={toggleTheme}

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Hero from "@/components/Hero";
 import ProductGrid from "@/components/ProductGrid";
+import StoreLocation from "@/components/StoreLocation";
+import CustomerReviews from "@/components/CustomerReviews";
 import { getCategories, getProducts } from "@/lib/products";
 import { CloseIcon } from "@/components/icons";
 
@@ -10,19 +12,26 @@ export default async function Home(props: PageProps<"/">) {
   const q = typeof searchParams.q === "string" ? searchParams.q : "";
   const category =
     typeof searchParams.category === "string" ? searchParams.category : "";
+  const occasion =
+    typeof searchParams.occasion === "string" ? searchParams.occasion : "";
   const canceled = searchParams.canceled === "1";
 
   const [products, categories] = await Promise.all([
-    getProducts({ q: q || null, category: category || null }),
+    getProducts({
+      q: q || null,
+      category: category || null,
+      occasion: occasion || null,
+    }),
     getCategories(),
   ]);
 
-  const hasFilters = Boolean(q || category);
+  const hasFilters = Boolean(q || category || occasion);
 
   const categoryHref = (name: string | null) => {
     const params = new URLSearchParams();
     if (q) params.set("q", q);
     if (name) params.set("category", name);
+    if (occasion) params.set("occasion", occasion);
     const qs = params.toString();
     return qs ? `/?${qs}` : "/";
   };
@@ -52,6 +61,7 @@ export default async function Home(props: PageProps<"/">) {
             <p className="mt-1 text-sm text-muted">
               {products.length} {products.length === 1 ? "product" : "products"}
               {category ? ` in ${category}` : ""}
+              {occasion ? ` · ${occasion}` : ""}
             </p>
           </div>
 
@@ -88,6 +98,10 @@ export default async function Home(props: PageProps<"/">) {
 
         <ProductGrid products={products} hasFilters={hasFilters} />
       </section>
+
+      <CustomerReviews />
+
+      <StoreLocation />
     </>
   );
 }

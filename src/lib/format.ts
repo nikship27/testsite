@@ -1,8 +1,10 @@
-const currencyFormatter = new Intl.NumberFormat("en-US", {
+const currencyFormatter = new Intl.NumberFormat("en-IN", {
   style: "currency",
-  currency: "USD",
+  currency: "INR",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
 });
 
-export function formatPrice(cents: number) {
-  return currencyFormatter.format(cents / 100);
+export function formatPrice(rupees: number) {
+  return currencyFormatter.format(rupees);
 }

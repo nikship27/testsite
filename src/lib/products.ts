@@ -4,15 +4,20 @@ import { prisma } from "@/lib/prisma";
 export interface ProductFilters {
   q?: string | null;
   category?: string | null;
+  occasion?: string | null;
 }
 
 export async function getProducts(filters: ProductFilters = {}) {
-  const { q, category } = filters;
+  const { q, category, occasion } = filters;
 
   const where: Prisma.ProductWhereInput = {};
 
   if (category) {
     where.category = category;
+  }
+
+  if (occasion) {
+    where.occasion = occasion;
   }
 
   if (q && q.trim()) {

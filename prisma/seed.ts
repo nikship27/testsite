@@ -9,84 +9,116 @@ const prisma = new PrismaClient({ adapter });
 
 const products = [
   {
-    title: "Aurora Wireless Headphones",
+    title: "Banarasi Silk Saree (Pure Gold Zari)",
     description:
-      "Premium over-ear headphones with active noise cancellation, 40-hour battery life, and plush memory-foam earcups for all-day comfort.",
-    price: 19999,
-    category: "Audio",
+      "A timeless Banarasi silk saree woven on handlooms with pure gold zari. Rich butis, a regal pallu, and the unmistakable sheen of silk make this the heirloom piece your festive wardrobe deserves.",
+    price: 12999,
+    category: "Sarees",
     image:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
-    stock: 18,
+      "https://images.pexels.com/photos/4227116/pexels-photo-4227116.jpeg?auto=compress&cs=tinysrgb&w=800",
+    fabric: "Pure Silk · Gold Zari",
+    careInstructions: "Dry Clean Only",
+    sizes: "One Size",
+    occasion: "Bridal & Wedding",
+    stock: 12,
   },
   {
-    title: "Pulse Smartwatch Pro",
+    title: "Chanderi Cotton Kurti Set with Dupatta",
     description:
-      "Advanced health and fitness smartwatch with AMOLED display, GPS tracking, sleep analysis, and 7-day battery life.",
-    price: 29999,
-    category: "Electronics",
+      "Featherlight Chanderi cotton kurti set with a matching handwoven dupatta. Breathable, elegant, and perfect from desk to dinner — a daily-wear classic with festive charm.",
+    price: 4499,
+    category: "Kurtas & Sets",
     image:
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80",
+      "https://images.pexels.com/photos/36311379/pexels-photo-36311379.jpeg?auto=compress&cs=tinysrgb&w=800",
+    fabric: "Chanderi Cotton",
+    careInstructions: "Gentle machine wash / Dry clean",
+    sizes: "S,M,L,XL,XXL",
+    occasion: "Casual & Office",
+    stock: 20,
+  },
+  {
+    title: "Royal Anarkali Suit (Hand-Embroidered)",
+    description:
+      "A flowing royal anarkali in soft georgette, hand-embroidered with delicate resham and zardozi details. The flared silhouette flatters every frame — made for weddings and celebrations.",
+    price: 8999,
+    category: "Kurtas & Sets",
+    image:
+      "https://images.pexels.com/photos/33343591/pexels-photo-33343591.jpeg?auto=compress&cs=tinysrgb&w=800",
+    fabric: "Georgette · Hand-Embroidered",
+    careInstructions: "Dry Clean Only",
+    sizes: "S,M,L,XL,XXL",
+    occasion: "Bridal & Wedding",
+    stock: 10,
+  },
+  {
+    title: "Chikankari Handloom Tunic",
+    description:
+      "Handcrafted Lucknowi chikankari on pure handloom cotton. Shadow-work embroidery in thread that matches the fabric creates a subtle, sophisticated texture you can wear anywhere.",
+    price: 2999,
+    category: "Kurtas & Sets",
+    image:
+      "https://images.pexels.com/photos/28512776/pexels-photo-28512776.jpeg?auto=compress&cs=tinysrgb&w=800",
+    fabric: "Handloom Cotton · Chikankari",
+    careInstructions: "Dry Clean Only",
+    sizes: "S,M,L,XL,XXL",
+    occasion: "Casual & Office",
     stock: 25,
   },
   {
-    title: "Vista Mirrorless Camera",
+    title: "Floral Printed Festive Lehenga",
     description:
-      "Full-frame mirrorless camera with 4K video, dual card slots, and a 24MP sensor that delivers stunning low-light performance.",
-    price: 89999,
-    category: "Electronics",
+      "A dreamy festive lehenga in floral-printed georgette with a flowing flared skirt and embellished blouse. Twirl-worthy, camera-ready, and sized for the bride-to-be's best friend.",
+    price: 15999,
+    category: "Lehengas",
     image:
-      "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=800&q=80",
+      "https://images.pexels.com/photos/28405815/pexels-photo-28405815.jpeg?auto=compress&cs=tinysrgb&w=800",
+    fabric: "Georgette · Floral Print",
+    careInstructions: "Dry Clean Only",
+    sizes: "S,M,L,XL,XXL",
+    occasion: "Festive Celebrations",
     stock: 8,
   },
   {
-    title: "Echo Smart Speaker",
+    title: "Handwoven Bandhani Dupatta",
     description:
-      "Room-filling 360° sound with voice control, built-in assistant, and seamless multi-room pairing.",
-    price: 12999,
-    category: "Audio",
+      "A vibrant handwoven bandhani dupatta with hundreds of hand-tied dots in jewel tones. The perfect finishing layer over kurtas, sarees, and lehengas alike.",
+    price: 1899,
+    category: "Dupattas",
     image:
-      "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=800&q=80",
+      "https://images.pexels.com/photos/13584935/pexels-photo-13584935.jpeg?auto=compress&cs=tinysrgb&w=800",
+    fabric: "Handwoven Cotton",
+    careInstructions: "Gentle hand wash",
+    sizes: "One Size",
+    occasion: "Festive Celebrations",
     stock: 30,
   },
   {
-    title: "Nomad Travel Backpack",
+    title: "Antique Kundan Jhumka Earrings",
     description:
-      "Water-resistant 30L travel backpack with padded 16-inch laptop sleeve, hidden anti-theft pocket, and ergonomic straps.",
-    price: 8999,
-    category: "Accessories",
+      "Statement antique kundan jhumkas with layered pearls and intricate meenakari detailing. Lightweight enough for all-day wear, dazzling enough for the front row at any function.",
+    price: 1499,
+    category: "Jewelry & Accessories",
     image:
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80",
-    stock: 22,
-  },
-  {
-    title: "Velocity Running Shoes",
-    description:
-      "Lightweight performance runners with responsive foam cushioning, breathable knit upper, and superior grip.",
-    price: 11999,
-    category: "Fashion",
-    image:
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80",
-    stock: 15,
-  },
-  {
-    title: "Solstice Polarized Sunglasses",
-    description:
-      "Handcrafted acetate frames with polarized UV400 lenses, glare reduction, and a timeless silhouette.",
-    price: 7499,
-    category: "Accessories",
-    image:
-      "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=800&q=80",
+      "https://images.pexels.com/photos/7314466/pexels-photo-7314466.jpeg?auto=compress&cs=tinysrgb&w=800",
+    fabric: "Gold-Plated · Kundan & Pearls",
+    careInstructions: "Keep away from water & perfume",
+    sizes: "One Size",
+    occasion: "Gifting & Accessories",
     stock: 40,
   },
   {
-    title: "Classic Cotton Tee",
+    title: "Hand-Embroidered Velvet Potli Bag",
     description:
-      "Soft, breathable 100% organic cotton t-shirt with a relaxed fit and pre-shrunk finish that lasts wash after wash.",
-    price: 2499,
-    category: "Fashion",
+      "A luxurious velvet potli bag hand-embroidered with gold zardozi and finished with a tassel drawstring. The quintessential accessory to carry to any celebration.",
+    price: 1199,
+    category: "Jewelry & Accessories",
     image:
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80",
-    stock: 50,
+      "https://images.pexels.com/photos/7353386/pexels-photo-7353386.jpeg?auto=compress&cs=tinysrgb&w=800",
+    fabric: "Velvet · Zardozi Embroidery",
+    careInstructions: "Wipe clean with a soft dry cloth",
+    sizes: "One Size",
+    occasion: "Gifting & Accessories",
+    stock: 35,
   },
 ];
 

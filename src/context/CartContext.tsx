@@ -14,13 +14,18 @@ import type { Product } from "@/generated/prisma/client";
 export interface CartItem {
   product: Product;
   quantity: number;
+  size?: string;
+}
+
+function itemKey(productId: string, size?: string) {
+  return `${productId}|${size ?? ""}`;
 }
 
 interface CartContextValue {
   items: CartItem[];
-  addToCart: (product: Product, quantity?: number) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addToCart: (product: Product, quantity?: number, size?: string) => void;
+  removeFromCart: (productId: string, size?: string) => void;
+  updateQuantity: (productId: string, quantity: number, size?: string) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
@@ -29,7 +34,7 @@ interface CartContextValue {
   closeCart: () => void;
 }
 
-const STORAGE_KEY = "lumina-cart";
+const STORAGE_KEY = "ethnic-threads-cart";
 
 const CartContext = createContext<CartContextValue | null>(null);
 
@@ -64,49 +69,64 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [state.items, state.hydrated]);
 
-  const addToCart = useCallback((product: Product, quantity = 1) => {
-    setState((prev) => {
-      const existing = prev.items.find((i) => i.product.id === product.id);
-      if (existing) {
+  const addToCart = useCallback(
+    (product: Product, quantity = 1, size?: string) => {
+      setState((prev) => {
+        const existing = prev.items.find(
+          (i) =>
+            i.product.id === product.id &&
+            itemKey(i.product.id, i.size) === itemKey(product.id, size)
+        );
+        if (existing) {
+          return {
+            ...prev,
+            items: prev.items.map((i) =>
+              itemKey(i.product.id, i.size) === itemKey(product.id, size)
+                ? { ...i, quantity: Math.min(i.quantity + quantity, product.stock) }
+                : i
+            ),
+          };
+        }
         return {
           ...prev,
-          items: prev.items.map((i) =>
-            i.product.id === product.id
-              ? { ...i, quantity: Math.min(i.quantity + quantity, product.stock) }
-              : i
-          ),
+          items: [
+            ...prev.items,
+            { product, quantity: Math.min(quantity, product.stock), size },
+          ],
         };
-      }
-      return {
+      });
+    },
+    []
+  );
+
+  const removeFromCart = useCallback((productId: string, size?: string) => {
+    setState((prev) => ({
+      ...prev,
+      items: prev.items.filter(
+        (i) => itemKey(i.product.id, i.size) !== itemKey(productId, size)
+      ),
+    }));
+  }, []);
+
+  const updateQuantity = useCallback(
+    (productId: string, quantity: number, size?: string) => {
+      setState((prev) => ({
         ...prev,
-        items: [
-          ...prev.items,
-          { product, quantity: Math.min(quantity, product.stock) },
-        ],
-      };
-    });
-  }, []);
-
-  const removeFromCart = useCallback((productId: string) => {
-    setState((prev) => ({
-      ...prev,
-      items: prev.items.filter((i) => i.product.id !== productId),
-    }));
-  }, []);
-
-  const updateQuantity = useCallback((productId: string, quantity: number) => {
-    setState((prev) => ({
-      ...prev,
-      items:
-        quantity <= 0
-          ? prev.items.filter((i) => i.product.id !== productId)
-          : prev.items.map((i) => {
-              if (i.product.id !== productId) return i;
-              const max = i.product.stock;
-              return { ...i, quantity: Math.min(quantity, max) };
-            }),
-    }));
-  }, []);
+        items:
+          quantity <= 0
+            ? prev.items.filter(
+                (i) => itemKey(i.product.id, i.size) !== itemKey(productId, size)
+              )
+            : prev.items.map((i) => {
+                if (itemKey(i.product.id, i.size) !== itemKey(productId, size))
+                  return i;
+                const max = i.product.stock;
+                return { ...i, quantity: Math.min(quantity, max) };
+              }),
+      }));
+    },
+    []
+  );
 
   const clearCart = useCallback(() => {
     setState((prev) => ({ ...prev, items: [] }));

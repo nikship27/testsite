@@ -5,6 +5,7 @@ import { getStripe, hasStripeKey } from "@/lib/stripe";
 interface CheckoutLine {
   productId: string;
   quantity: number;
+  size?: string;
 }
 
 function getBaseUrl(request: NextRequest) {
@@ -38,13 +39,17 @@ export async function POST(request: NextRequest) {
   for (const item of rawItems) {
     const productId = typeof item?.productId === "string" ? item.productId : "";
     const quantity = Math.floor(Number(item?.quantity));
+    const size =
+      typeof item?.size === "string" && item.size.trim()
+        ? item.size.trim().slice(0, 20)
+        : undefined;
     if (!productId || !Number.isInteger(quantity) || quantity < 1) {
       return Response.json(
         { error: "Each item needs a valid productId and a positive quantity" },
         { status: 400 }
       );
     }
-    items.push({ productId, quantity });
+    items.push({ productId, quantity, size });
   }
 
   const products = await prisma.product.findMany({
@@ -61,7 +66,7 @@ export async function POST(request: NextRequest) {
   const productById = new Map(products.map((p) => [p.id, p]));
   let totalAmount = 0;
 
-  const lineItems = items.map(({ productId, quantity }) => {
+  const lineItems = items.map(({ productId, quantity, size }) => {
     const product = productById.get(productId)!;
     if (product.stock < quantity) {
       throw new Error(
@@ -69,14 +74,20 @@ export async function POST(request: NextRequest) {
       );
     }
     totalAmount += product.price * quantity;
+    const description = [
+      product.description.slice(0, 220),
+      size ? `Size: ${size}` : null,
+    ]
+      .filter(Boolean)
+      .join(" · ");
     return {
       quantity,
       price_data: {
-        currency: "usd",
-        unit_amount: product.price,
+        currency: "inr",
+        unit_amount: product.price * 100,
         product_data: {
           name: product.title,
-          description: product.description.slice(0, 250),
+          description,
           images: [product.image],
         },
       },
@@ -101,10 +112,11 @@ export async function POST(request: NextRequest) {
         status: "PENDING",
         stripeSessionId: session.id,
         items: {
-          create: items.map(({ productId, quantity }) => ({
+          create: items.map(({ productId, quantity, size }) => ({
             productId,
             quantity,
             price: productById.get(productId)!.price,
+            size,
           })),
         },
       },
